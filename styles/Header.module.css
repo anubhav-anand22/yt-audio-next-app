@@ -84,6 +84,7 @@
         transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
     }
     
+    .activePathLi,
     .navUl li:hover {
         background-color: var(--action-color);
         color: rgb(5, 5, 5);

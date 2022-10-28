@@ -11,7 +11,7 @@ interface DrawerProps {
 interface LinkItemProps {
     title: string;
     href: string;
-    route: NextRouter
+    route: NextRouter;
 }
 
 const Drawer = ({ isDrawerShow, setIsDrawerShow }: DrawerProps) => {
@@ -33,8 +33,8 @@ const Drawer = ({ isDrawerShow, setIsDrawerShow }: DrawerProps) => {
                 </div>
                 <ul className={style.drawer_nav_ul}>
                     <LinkItem href="/" title="Home" route={route} />
-                    <LinkItem href="/setting" title="Setting" route={route}  />
-                    <LinkItem href="/about" title="About me" route={route}  />
+                    <LinkItem href="/setting" title="Setting" route={route} />
+                    <LinkItem href="/about" title="About me" route={route} />
                 </ul>
             </nav>
         </div>
@@ -43,9 +43,15 @@ const Drawer = ({ isDrawerShow, setIsDrawerShow }: DrawerProps) => {
 
 const LinkItem = ({ href, title, route }: LinkItemProps) => {
     return (
-        <li className={`${route.pathname === href ? style.activePathLi : ""}`}>
-            <Link href={href}>{title}</Link>
-        </li>
+        <Link href={href}>
+            <li
+                className={`${
+                    route.pathname === href ? style.activePathLi : ""
+                }`}
+            >
+                {title}
+            </li>
+        </Link>
     );
 };
 
