@@ -1,0 +1,94 @@
+.header {
+    background-color: var(--primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px;
+    color: white;
+}
+
+.header h1 {
+    position: relative;
+}
+
+.header h1::after {
+    width: 0%;
+    background-color: white;
+    display: inline-block;
+    height: 2px;
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 4px;
+    transition: width 0.3s ease-in-out;
+}
+
+.header h1:hover::after {
+    width: 100%;
+}
+
+.nav {
+    display: none;
+}
+
+.drawrIcon {
+    display: flex;
+    flex-direction: column;
+    width: 30px;
+    height: 24px;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.drawrIcon div {
+    width: 30px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: var(--action-color);
+    transition: transform 0.2s ease-in-out, width 0.2s ease-in-out;
+}
+
+.drawrIcon div:nth-child(2) {
+    width: 20px;
+    transition: width 0.2s ease-in-out;
+}
+
+.drawrIcon:hover div:nth-child(1) {
+    transform: rotate(-40deg) translate(-13px, -6px);
+    width: 20px;
+}
+
+.drawrIcon:hover div:nth-child(3) {
+    transform: rotate(40deg) translate(-13px, 6px);
+    width: 20px;
+}
+
+.drawrIcon:hover div:nth-child(2) {
+    width: 30px;
+}
+
+@media (min-width: 600px) {
+    .nav {
+        display: block;
+    }
+    .navUl {
+        display: flex;
+        list-style: none;
+    }
+    
+    .navUl li {
+        padding: 7px 10px;
+        margin: 0 5px;
+        border-radius: 18px;
+        border: 2px solid var(--action-color);
+        transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+    
+    .navUl li:hover {
+        background-color: var(--action-color);
+        color: rgb(5, 5, 5);
+    }
+    .drawrIcon {
+        display: none;
+    }
+}
