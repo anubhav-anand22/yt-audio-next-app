@@ -9,7 +9,7 @@
     padding: 5px 10px;
     border-radius: 25px;
     margin-top: 20px;
-    width: 90vw;
+    width: min(90vw, 800px);
 }
 
 .form input {
@@ -19,7 +19,7 @@
     background: transparent;
     font-size: 16px;
     color: black;
-    width: calc(90vw - 60px);
+    width: calc(min(90vw, 800px) - 60px);
 }
 
 .form button {
@@ -43,3 +43,9 @@
     top: 0;
     background-color: rgb(124, 124, 124);
 }
+
+/* @media (min-width: 600px) {
+    .form input {
+        width: ;
+    }
+} */

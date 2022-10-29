@@ -12,9 +12,9 @@ export default function Home() {
     if(!url) return;
     const data = parseUrlInput(url);
     if(data.listId) {
-      router.push("/player?list=" + data.listId)
+      router.push("/video-list-player?list=" + data.listId)
     } else if (data.videoId) {
-      router.push('/player?vid=' + data.videoId)
+      router.push('/video-player?vid=' + data.videoId)
     }
   }
 

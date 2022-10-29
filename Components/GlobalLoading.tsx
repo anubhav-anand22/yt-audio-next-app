@@ -6,10 +6,13 @@ const GlobalLoading = () => {
 
     return (
         <>
-            {isLoading ? (
+            {isLoading.value ? (
                 <div className={style.loaderBack}>
-                    <div className={style.loaderOut}>
-                        <div className={style.loaderIn}></div>
+                    <div className={style.loaderCont}>
+                        <div className={style.loaderOut}>
+                            <div className={style.loaderIn}></div>
+                        </div>
+                        <p>{isLoading.message}</p>
                     </div>
                 </div>
             ) : null}

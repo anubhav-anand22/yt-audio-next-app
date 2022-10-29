@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import ytdl from 'ytdl-core'
 
 type Data = {
-  data?: ytdl.videoInfo[],
+  data?: any,
   error?: string,
 }
 
@@ -14,11 +14,20 @@ export default async function handler(
 
   if(!ids) return res.status(400).send({error: "ids query is required", data: []});
 
-  const idsArr = ids.split(' ').filter(e => e !== "")
+  const dataPromiseArr = ids.split(' ').map(e => ytdl.getInfo(`https://www.youtube.com/watch?v=${e}`));
 
-  const idsArrPromise = idsArr.map(e => ytdl.getInfo(`https://www.youtube.com/watch?v=${e}`))
+  const data = await Promise.all(dataPromiseArr);
 
-  const data = await Promise.all(idsArrPromise);
+  res.send({
+    data: data.map(e => {
+        return {
+            videoDetails: e.videoDetails,
+            related_videos: e.related_videos,
+            url: e.formats.find(e => e.itag === 140)?.url
+          }
+    }),
+    error: ""
+  })
 
-  res.send({data: data, error: ""})
+  
 }

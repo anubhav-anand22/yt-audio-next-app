@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import axios from 'axios'
 
 type Data = {
-    ids?: any;
+    data?: any;
     error?: string;
 };
 
@@ -13,8 +13,8 @@ export default async function handler(
     const key = process.env.YT_API_KEY;
     const playlistid = typeof req.query.id === "string" ? req.query.id : "";
 
-    if (!key) return res.status(500).send({ error: "", ids: [] });
-    if (!playlistid) return res.status(400).send({error: "Id is required", ids: []});
+    if (!key) return res.status(500).send({ error: "", data: [] });
+    if (!playlistid) return res.status(400).send({error: "Id is required", data: []});
 
     let 
     url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistid}&key=${process.env.YT_API_KEY}`;
@@ -31,7 +31,9 @@ export default async function handler(
         });
     }
     
-    const data = await helper('')
+    const data: any = await helper('')
 
-    res.send({error: "", ids: data})
+    res.send({error: "", data: data.map(
+        (e: any) => e.snippet.resourceId.videoId
+    )})
 }

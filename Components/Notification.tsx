@@ -52,7 +52,7 @@ const NotificationItem = ({ data }: NotificationItemProps) => {
                 secondTimeoutId.current = undefined;
             }
         };
-    });
+    }, [data.id, dispatch]);
 
     return (
         <div

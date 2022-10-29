@@ -38,6 +38,17 @@
     animation-timing-function: linear;
 }
 
+.loaderCont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loaderCont p {
+    color: var(--black);
+    margin-top: 10px;
+}
+
 @keyframes spin {
     from {
         transform: rotate(0deg);
