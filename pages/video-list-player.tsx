@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import VidItem from "../Components/VidItem";
 import { setLoading } from "../store/isLoadingSlice";
 import { addNotification } from "../store/notificationSlice";
+import style from "../styles/Pages/video-list-player.module.css";
 
 const VideoListPlayer = () => {
     const router = useRouter();
@@ -83,12 +84,12 @@ const VideoListPlayer = () => {
     }, [router, dispatch, loadData]);
 
     const onItemClick = (index: number) => {
-        setVideoDataIndex(index)
-    }
+        setVideoDataIndex(index);
+    };
 
     return (
         <div>
-            <div>
+            <div className={style.itemCont}>
                 {videoList.map((e: any, i) => (
                     <VidItem
                         key={e.videoDetails.videoId}
@@ -97,7 +98,7 @@ const VideoListPlayer = () => {
                             thumbnails: e.videoDetails.thumbnails,
                             id: e.videoDetails.videoId,
                             length_seconds: e.videoDetails.lengthSeconds,
-                            view_count: e.videoDetails.viewCount
+                            view_count: e.videoDetails.viewCount,
                         }}
                         index={i}
                         onClick={onItemClick}

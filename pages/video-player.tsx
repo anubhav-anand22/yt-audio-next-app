@@ -5,6 +5,7 @@ import { addNotification } from "../store/notificationSlice";
 import axios from "axios";
 import VidItem from "../Components/VidItem";
 import { setLoading } from "../store/isLoadingSlice";
+import style from '../styles/Pages/video-player.module.css';
 
 export default function VideoList() {
     const router = useRouter();
@@ -103,7 +104,7 @@ export default function VideoList() {
 
     return (
         <div>
-            <div>
+            <div className={style.itemCont}>
                 {relatedVid.map((e, i) => (
                     <VidItem
                         onClick={onItemClick}

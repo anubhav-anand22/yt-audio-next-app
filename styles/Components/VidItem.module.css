@@ -1,0 +1,43 @@
+.item {
+    background-color: var(--item-background-color);
+    border-radius: 10px;
+    overflow: hidden;
+    color: var(--black);
+}
+
+.imgCont {
+    width: 100%;
+    aspect-ratio: 16/9;
+    position: relative;
+}
+
+.imgCont p {
+    background-color: var(--item-background-color);
+    padding: 3px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 12px;
+    color: var(--black);
+}
+
+.img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    height: auto;
+}
+
+.title {
+    padding: 5px 10px;
+}
+
+.viewCount {
+    font-size: 12px;
+    text-align: end;
+    padding: 0px 10px 10px 10px;
+}
+
+.activeItem {
+    opacity: 0.7;
+}
