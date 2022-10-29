@@ -3,11 +3,13 @@ import Image from "next/image";
 interface VidItemType {
     data: vItemType;
     index: number;
+    onClick(index: number): void;
+    activeIndex: number;
 }
 
-const VidItem = ({ data }: VidItemType) => {
+const VidItem = ({ data, index, onClick }: VidItemType) => {
     return (
-        <div>
+        <div onClick={() => onClick(index)}>
             <div>
                 <Image
                     src={data.thumbnails[0].url}
