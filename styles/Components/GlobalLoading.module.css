@@ -8,6 +8,7 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(255, 255, 255, 0.25);
+    z-index: 5;
 }
 
 .loaderOut {
@@ -47,6 +48,9 @@
 .loaderCont p {
     color: var(--black);
     margin-top: 10px;
+    background-color: var(--white);
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
 @keyframes spin {
