@@ -6,11 +6,12 @@ import axios from "axios";
 import VidItem from "../Components/VidItem";
 import { setLoading } from "../store/isLoadingSlice";
 import style from '../styles/Pages/video-player.module.css';
+import AudioPlayer from "../Components/AudioPlayer";
 
 export default function VideoList() {
     const router = useRouter();
     const dispatch = useDispatch();
-    const [videoData, setVideoData] = useState({});
+    const [videoData, setVideoData] = useState<VideoDetailsType | null>(null);
     const [relatedVid, setRelatedVid] = useState<vItemType[]>([]);
 
     const loadData = useCallback(
@@ -38,18 +39,10 @@ export default function VideoList() {
                     );
                 }
 
-                const vData = {
-                    title: data.data.videoDetails.title,
-                    owner: data.data.videoDetails.ownerChannelName,
-                    thumbnails: data.data.videoDetails.thumbnails,
-                    length_seconds: data.data.videoDetails.lengthSeconds,
-                    keywords: data.data.videoDetails.keywords,
-                    description: data.data.videoDetails.description,
-                    uploadDate: data.data.videoDetails.uploadDate,
-                    url: data.data.url,
-                };
+                const vData = {...data.data.videoDetails, audioUrl: data.data.url};
 
                 setVideoData(vData);
+
                 setRelatedVid(
                     data.data.related_videos.map((e: any) => {
                         return {
@@ -102,8 +95,17 @@ export default function VideoList() {
         router.push("/video-player?vid=" + relatedVid[index].id);
     };
 
+    const nextItem = () => {
+        router.push("/video-player?vid=" + relatedVid[0].id);
+    }
+
+    const previousItem = () => {
+        router.back();
+    }
+
     return (
         <div>
+            {videoData ? <AudioPlayer data={videoData} next={nextItem} previous={previousItem} /> : null}
             <div className={style.itemCont}>
                 {relatedVid.map((e, i) => (
                     <VidItem

@@ -9,7 +9,7 @@ export default function Home() {
 
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(!url) return;
+    if(!url) return alert("No url");
     const data = parseUrlInput(url);
     if(data.listId) {
       router.push("/video-list-player?list=" + data.listId)
@@ -28,7 +28,7 @@ export default function Home() {
                     value={url}
                     onChange={e => setUrl(e.currentTarget.value)}
                 />
-                <button>Go</button>
+                <button type="submit">GO</button>
             </form>
         </div>
     );

@@ -5,7 +5,7 @@ interface UpdateNotificationType {
     payload: NotificationSliceType;
 }
 
-export const notificationSlice = createSlice({
+export const notificationSlice: any = createSlice({
     name: "NOTIFICATION",
     initialState: <NotificationSliceType[]>[],
     reducers: {

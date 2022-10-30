@@ -1,0 +1,155 @@
+.playerBack {
+    position: fixed;
+    top: 0;
+    left: 101vw;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg);
+    z-index: 2;
+    transition: left 0.6s ease-in-out;
+    overflow-y: scroll;
+    color: var(--black);
+}
+
+.playerMain {
+    width: min(600px, 95vw);
+    padding: 10px;
+    background-color: var(--primary);
+    position: fixed;
+    bottom: 10px;
+    left: calc(50vw - min(300px, 47.5vw));
+    z-index: 2;
+    transition: bottom 0.6s ease-in-out;
+    border-radius: 10px;
+    color: var(--black);
+}
+
+.fullScreen .playerBack {
+    left: 0;
+}
+
+.fullScreen .playerMain {
+    bottom: 100vh;
+}
+
+.playerIndicatorCont {
+    display: flex;
+    gap: 5px;
+}
+
+.playerIndicatorCont input {
+    flex: 1;
+}
+
+.playerIndicatorCont p {
+    font-size: 14px;
+}
+
+.playerMainBtnCont {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+.playerMainBtnCont button {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--action-color);
+    color: black;
+}
+
+.playerBackBackBtn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border-radius: 20px;
+    border: none;
+}
+
+.playerBackBackBtnCont {
+    position: relative;
+}
+
+.palyerBackMain {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px;
+}
+
+.palyerBackMain > div:nth-child(1) {
+    flex: 1;
+}
+
+.palyerBackMain > div:nth-child(2) {
+    flex: 1;
+}
+
+.playerBackImgCont {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.playerBackImg {
+    width: 90%;
+    height: auto;
+    aspect-ratio: 16/9;
+    border-radius: 10px;
+}
+
+.description {
+    white-space: pre-line;
+    margin-bottom: 20px;
+}
+
+.playerBackTitle {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.playerBackOwnerCont {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.playerBackOwnerImg {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+}
+
+.playerBackOwnerCont a {
+    text-decoration: underline;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+.playerBackOwnerCont a p {
+    font-size: 12px;
+    display: inline;
+}
+
+@media (min-width: 800px) {
+    .palyerBackMain {
+        flex-direction: row;
+    }
+    .playerBackImgCont {
+        justify-content: start;
+    }
+}

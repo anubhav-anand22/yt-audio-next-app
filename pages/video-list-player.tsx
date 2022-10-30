@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { useState, useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import AudioPlayer from "../Components/AudioPlayer";
 import VidItem from "../Components/VidItem";
 import { setLoading } from "../store/isLoadingSlice";
 import { addNotification } from "../store/notificationSlice";
@@ -11,7 +12,7 @@ const VideoListPlayer = () => {
     const router = useRouter();
     const dispatch = useDispatch();
     const [videoDataIndex, setVideoDataIndex] = useState(0);
-    const [videoList, setVideoList] = useState([]);
+    const [videoList, setVideoList] = useState<any[]>([]);
 
     const loadData = useCallback(
         async (id: string) => {
@@ -87,8 +88,35 @@ const VideoListPlayer = () => {
         setVideoDataIndex(index);
     };
 
+    const nextItem = () => {
+        setVideoDataIndex(pre => {
+            if(videoList.length <= pre + 1) {
+                return 0
+            } else {
+                return pre + 1
+            }
+        })
+    };
+
+    const previousItem = () => {
+        setVideoDataIndex(pre => {
+            if(pre <= 0) {
+                return videoList.length - 1
+            } else {
+                return pre - 1
+            }
+        })
+    };
+
     return (
         <div>
+            {videoList.length === 0 ? null : (
+                <AudioPlayer
+                    data={{...videoList[videoDataIndex].videoDetails, audioUrl: videoList[videoDataIndex].url}}
+                    next={nextItem}
+                    previous={previousItem}
+                />
+            )}
             <div className={style.itemCont}>
                 {videoList.map((e: any, i) => (
                     <VidItem

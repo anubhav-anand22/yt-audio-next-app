@@ -23,3 +23,87 @@ interface vItemType {
     length_seconds: number;
     id: string;
 }
+
+
+interface VideoDetailsEmbed {
+    iframeUrl: string;
+    flashUrl: string;
+    width: number;
+    height: number;
+    flashSecureUrl: string;
+}
+
+interface VideoDetailsThumbnail {
+    url: string;
+    width: number;
+    height: number;
+}
+
+interface VideoDetailsAuthor {
+    id: string;
+    name: string;
+    user: string;
+    channel_url: string;
+    external_channel_url: string;
+    user_url: string;
+    thumbnails: VideoDetailsThumbnail[];
+    verified: boolean;
+    subscriber_count: number;
+}
+
+interface VideoDetailsMedia {
+}
+
+interface VideoDetailsStoryboard {
+    templateUrl: string;
+    thumbnailWidth: number;
+    thumbnailHeight: number;
+    thumbnailCount: number;
+    interval: number;
+    columns: number;
+    rows: number;
+    storyboardCount: number;
+}
+
+interface VideoDetailsThumbnail2 {
+    url: string;
+    width: number;
+    height: number;
+}
+
+interface VideoDetailsType {
+    embed: VideoDetailsEmbed;
+    title: string;
+    description: string;
+    lengthSeconds: string;
+    ownerProfileUrl: string;
+    externalChannelId: string;
+    isFamilySafe: boolean;
+    availableCountries: string[];
+    isUnlisted: boolean;
+    hasYpcMetadata: boolean;
+    viewCount: string;
+    category: string;
+    publishDate: string;
+    ownerChannelName: string;
+    uploadDate: string;
+    videoId: string;
+    keywords: string[];
+    channelId: string;
+    isOwnerViewing: boolean;
+    isCrawlable: boolean;
+    allowRatings: boolean;
+    author: VideoDetailsAuthor;
+    isPrivate: boolean;
+    isUnpluggedCorpus: boolean;
+    isLiveContent: boolean;
+    media: VideoDetailsMedia;
+    likes?: any;
+    dislikes?: any;
+    age_restricted: boolean;
+    video_url: string;
+    storyboards: VideoDetailsStoryboard[];
+    chapters: any[];
+    thumbnails: VideoDetailsThumbnail2[];
+    audioUrl: string;
+}
