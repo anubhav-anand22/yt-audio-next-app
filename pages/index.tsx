@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import { parseUrlInput } from "../helpers/parseUrlInput";
 import style from "../styles/Home.module.css";
+import Head from "next/head";
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -20,6 +21,9 @@ export default function Home() {
 
     return (
         <div className={style.home}>
+            <Head>
+              <title>YTA</title>
+            </Head>
             <form className={style.form} onSubmit={onFormSubmit}>
                 <input
                     type="text"

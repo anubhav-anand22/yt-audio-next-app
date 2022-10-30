@@ -1,4 +1,5 @@
 import axios from "axios";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState, useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -110,6 +111,9 @@ const VideoListPlayer = () => {
 
     return (
         <div>
+            <Head>
+                <title>{videoList[videoDataIndex]?.videoDetails?.title || "Playlist player"}</title>
+            </Head>
             {videoList.length === 0 ? null : (
                 <AudioPlayer
                     data={{...videoList[videoDataIndex].videoDetails, audioUrl: videoList[videoDataIndex].url}}

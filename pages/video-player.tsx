@@ -7,6 +7,7 @@ import VidItem from "../Components/VidItem";
 import { setLoading } from "../store/isLoadingSlice";
 import style from '../styles/Pages/video-player.module.css';
 import AudioPlayer from "../Components/AudioPlayer";
+import Head from "next/head";
 
 export default function VideoList() {
     const router = useRouter();
@@ -105,6 +106,9 @@ export default function VideoList() {
 
     return (
         <div>
+            <Head>
+                <title>{videoData?.title || "Audio player"}</title>
+            </Head>
             {videoData ? <AudioPlayer data={videoData} next={nextItem} previous={previousItem} /> : null}
             <div className={style.itemCont}>
                 {relatedVid.map((e, i) => (
