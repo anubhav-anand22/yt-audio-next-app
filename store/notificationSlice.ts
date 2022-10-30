@@ -10,7 +10,7 @@ export const notificationSlice = createSlice({
     initialState: <NotificationSliceType[]>[],
     reducers: {
         addNotification(state, action: PayloadAction<NotificationSliceType>) {
-            return [...state, action.payload].slice(0, 4);
+            return [action.payload, ...state].slice(0, 4);
         },
         removeNotification(state, action: PayloadAction<string>) {
             return state.filter((e) => e.id !== action.payload);
