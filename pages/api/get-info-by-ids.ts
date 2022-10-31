@@ -14,20 +14,24 @@ export default async function handler(
 
   if(!ids) return res.status(400).send({error: "ids query is required", data: []});
 
-  const dataPromiseArr = ids.split(' ').map(e => ytdl.getInfo(`https://www.youtube.com/watch?v=${e}`));
+  const dataPromiseArr = ids.split(' ').map(e => ytdl.getInfo(`https://www.youtube.com/watch?v=${e}`).then(e => {
+    return e
+  }).catch(e => {
+    return "REMOVE"
+  }));
 
-  const data = await Promise.all(dataPromiseArr);
+  let data = await Promise.all(dataPromiseArr);
+
+  data = data.filter(e => typeof e !== 'string');
 
   res.send({
-    data: data.map(e => {
+    data: data.map((e: any) => {
         return {
-            videoDetails: e.videoDetails,
-            related_videos: e.related_videos,
-            url: e.formats.find(e => e.itag === 140)?.url
+            videoDetails: e?.videoDetails || {},
+            url: e?.formats?.find((e: any) => e.itag === 140)?.url || ""
           }
     }),
     error: ""
-  })
-
+  });
   
 }
