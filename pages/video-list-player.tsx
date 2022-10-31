@@ -48,25 +48,62 @@ const VideoListPlayer = () => {
                     })
                 );
 
-                const { data: vidData } = await axios(
-                    `/api/get-info-by-ids?ids=${idData.data.join("+")}`
-                );
+                let vidData: any;
 
-                if (vidData?.error || !vidData.data) {
-                    dispatch(
-                        addNotification({
-                            id: Math.random().toString(),
-                            message:
-                                "Something went wrong while fetching video data",
-                            title: "Error",
-                            type: "danger",
+                const storedDataJson = localStorage.getItem("YTA_YTD_DATA");
+                const storedData = JSON.parse(
+                    storedDataJson ||
+                        `{"ids": "", "vidDataStored": {"data": [], "error": ""}, "ListId": "", "expires": 0}`
+                );
+                const date = new Date().getTime();
+
+                if (
+                    storedDataJson &&
+                    storedData &&
+                    storedData?.expires !== 0 &&
+                    storedData?.expires > date
+                ) {
+                    vidData = storedData.vidDataStored;
+                } else {
+                    const { data } = await axios(
+                        `/api/get-info-by-ids?ids=${idData.data.join("+")}`
+                    );
+
+                    if (data?.error || !data.data) {
+                        dispatch(
+                            addNotification({
+                                id: Math.random().toString(),
+                                message:
+                                    "Something went wrong while fetching video data",
+                                title: "Error",
+                                type: "danger",
+                            })
+                        );
+                    }
+
+                    vidData = data;
+
+                    localStorage.setItem(
+                        "YTA_YTD_DATA",
+                        JSON.stringify({
+                            ids: idData.data.sort().join("+"),
+                            vidDataStored: data,
+                            ListId: id,
+                            expires:
+                                parseInt(
+                                    data.data[0].url
+                                        .split("?")[1]
+                                        .split("&")
+                                        .find((e: string) =>
+                                            e.includes("expire=")
+                                        )
+                                        .split("=")[1] + "000"
+                                ) - 900000,
                         })
                     );
                 }
 
                 dispatch(setLoading({ value: false, message: "" }));
-
-                console.log(vidData);
 
                 setVideoList(vidData.data);
             } catch (e) {
@@ -90,33 +127,39 @@ const VideoListPlayer = () => {
     };
 
     const nextItem = () => {
-        setVideoDataIndex(pre => {
-            if(videoList.length <= pre + 1) {
-                return 0
+        setVideoDataIndex((pre) => {
+            if (videoList.length <= pre + 1) {
+                return 0;
             } else {
-                return pre + 1
+                return pre + 1;
             }
-        })
+        });
     };
 
     const previousItem = () => {
-        setVideoDataIndex(pre => {
-            if(pre <= 0) {
-                return videoList.length - 1
+        setVideoDataIndex((pre) => {
+            if (pre <= 0) {
+                return videoList.length - 1;
             } else {
-                return pre - 1
+                return pre - 1;
             }
-        })
+        });
     };
 
     return (
         <div>
             <Head>
-                <title>{videoList[videoDataIndex]?.videoDetails?.title || "Playlist player"}</title>
+                <title>
+                    {videoList[videoDataIndex]?.videoDetails?.title ||
+                        "Playlist player"}
+                </title>
             </Head>
             {videoList.length === 0 ? null : (
                 <AudioPlayer
-                    data={{...videoList[videoDataIndex].videoDetails, audioUrl: videoList[videoDataIndex].url}}
+                    data={{
+                        ...videoList[videoDataIndex].videoDetails,
+                        audioUrl: videoList[videoDataIndex].url,
+                    }}
                     next={nextItem}
                     previous={previousItem}
                 />
