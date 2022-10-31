@@ -21,7 +21,6 @@ export default function App({ Component, pageProps }: AppProps) {
         const text = parsedUrl.searchParams.get("text");
         if (text) {
             const parsedData = parseUrlInput(text);
-            console.log(parsedData);
             if (parsedData.listId) {
                 window.location.href = `${parsedUrl.protocol}//${parsedUrl.hostname}${parsedUrl.port ? ":" + parsedUrl.port : ""}/video-list-player?list=${parsedData.listId}`;
             } else if (parsedData.videoId) {
