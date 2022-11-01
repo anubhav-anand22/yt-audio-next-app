@@ -75,8 +75,8 @@ const VideoListPlayer = () => {
                     let outputDataPromises = []
                     const idDataLenght = idData.data.length;
 
-                    for(let i = 0; i < Math.ceil(idDataLenght / 60); i++){
-                        const res = axios(`/api/get-info-by-ids?ids=${idData.data.slice(i * 60, (i + 1) * 60).join("+")}`)
+                    for(let i = 0; i < Math.ceil(idDataLenght / 30); i++){
+                        const res = axios(`/api/get-info-by-ids?ids=${idData.data.slice(i * 30, (i + 1) * 30).join("+")}`)
                         outputDataPromises.push(res);
                     }
 
