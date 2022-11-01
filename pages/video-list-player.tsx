@@ -44,7 +44,7 @@ const VideoListPlayer = () => {
                 dispatch(
                     setLoading({
                         value: true,
-                        message: "Getting video data",
+                        message: "Checking chach",
                     })
                 );
 
@@ -61,15 +61,28 @@ const VideoListPlayer = () => {
                     storedDataJson &&
                     storedData &&
                     storedData?.expires !== 0 &&
-                    storedData?.expires > date
+                    storedData?.expires > date &&
+                    storedData?.ListId === id
                 ) {
                     vidData = storedData.vidDataStored;
                 } else {
-                    const { data } = await axios(
-                        `/api/get-info-by-ids?ids=${idData.data.join("+")}`
+                    dispatch(
+                        setLoading({
+                            value: true,
+                            message: "Getting video data",
+                        })
                     );
+                    let outputDataPromises = []
+                    const idDataLenght = idData.data.length;
 
-                    if (data?.error || !data.data) {
+                    for(let i = 0; i < Math.ceil(idDataLenght / 60); i++){
+                        const res = axios(`/api/get-info-by-ids?ids=${idData.data.slice(i * 60, (i + 1) * 60).join("+")}`)
+                        outputDataPromises.push(res);
+                    }
+
+                    const output = await Promise.all(outputDataPromises);
+
+                    if (output[0]?.data?.error || !output[0]?.data?.data) {
                         dispatch(
                             addNotification({
                                 id: Math.random().toString(),
@@ -81,17 +94,23 @@ const VideoListPlayer = () => {
                         );
                     }
 
-                    vidData = data;
+                    let data:any = [];
+
+                    for(let i of output){
+                        data = [...data, ...i.data.data]
+                    }
+
+                    vidData = {data, error: ""};
 
                     localStorage.setItem(
                         "YTA_YTD_DATA",
                         JSON.stringify({
                             ids: idData.data.sort().join("+"),
-                            vidDataStored: data,
+                            vidDataStored: vidData,
                             ListId: id,
                             expires:
                                 parseInt(
-                                    data.data[0].url
+                                    vidData.data[0].url
                                         .split("?")[1]
                                         .split("&")
                                         .find((e: string) =>
