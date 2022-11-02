@@ -19,7 +19,7 @@ interface ThumbnailsType {
 interface vItemType {
     title: string;
     thumbnails: ThumbnailsType[];
-    view_count: number;
+    view_count: string;
     length_seconds: number;
     id: string;
 }

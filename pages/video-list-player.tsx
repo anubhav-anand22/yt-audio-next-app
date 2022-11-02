@@ -1,7 +1,7 @@
 import axios from "axios";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, FormEvent, useRef } from "react";
 import { useDispatch } from "react-redux";
 import AudioPlayer from "../Components/AudioPlayer";
 import VidItem from "../Components/VidItem";
@@ -14,6 +14,9 @@ const VideoListPlayer = () => {
     const dispatch = useDispatch();
     const [videoDataIndex, setVideoDataIndex] = useState(0);
     const [videoList, setVideoList] = useState<any[]>([]);
+    const [sortBy, setSortBy] = useState("name");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchInpVal, setSearchInpVal] = useState("");
 
     const loadData = useCallback(
         async (id: string) => {
@@ -72,11 +75,15 @@ const VideoListPlayer = () => {
                             message: "Getting video data",
                         })
                     );
-                    let outputDataPromises = []
+                    let outputDataPromises = [];
                     const idDataLenght = idData.data.length;
 
-                    for(let i = 0; i < Math.ceil(idDataLenght / 30); i++){
-                        const res = axios(`/api/get-info-by-ids?ids=${idData.data.slice(i * 30, (i + 1) * 30).join("+")}`)
+                    for (let i = 0; i < Math.ceil(idDataLenght / 30); i++) {
+                        const res = axios(
+                            `/api/get-info-by-ids?ids=${idData.data
+                                .slice(i * 30, (i + 1) * 30)
+                                .join("+")}`
+                        );
                         outputDataPromises.push(res);
                     }
 
@@ -94,13 +101,13 @@ const VideoListPlayer = () => {
                         );
                     }
 
-                    let data:any = [];
+                    let data: any = [];
 
-                    for(let i of output){
-                        data = [...data, ...i.data.data]
+                    for (let i of output) {
+                        data = [...data, ...i.data.data];
                     }
 
-                    vidData = {data, error: ""};
+                    vidData = { data, error: "" };
 
                     localStorage.setItem(
                         "YTA_YTD_DATA",
@@ -165,6 +172,11 @@ const VideoListPlayer = () => {
         });
     };
 
+    const onSearchSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        setSearchQuery(searchInpVal)
+    }
+
     return (
         <div>
             <Head>
@@ -183,22 +195,74 @@ const VideoListPlayer = () => {
                     previous={previousItem}
                 />
             )}
+            <div className={style.controlCont}>
+                <div>
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.currentTarget.value)}
+                    >
+                        <option value="name">By name</option>
+                        <option value="view">By view count</option>
+                        <option value="length">By video length</option>
+                    </select>
+                </div>
+                <div>
+                    <form onSubmit={onSearchSubmit}>
+                        <input
+                            type="search"
+                            placeholder="Search"
+                            value={searchInpVal}
+                            onChange={(e) => {
+                                if(e.currentTarget.value === '') setSearchQuery("")
+                                setSearchInpVal(e.currentTarget.value)
+                            }}
+                        />
+                        <button>Go</button>
+                    </form>
+                </div>
+            </div>
             <div className={style.itemCont}>
-                {videoList.map((e: any, i) => (
-                    <VidItem
-                        key={e.videoDetails.videoId}
-                        data={{
-                            title: e.videoDetails.title,
-                            thumbnails: e.videoDetails.thumbnails,
-                            id: e.videoDetails.videoId,
-                            length_seconds: e.videoDetails.lengthSeconds,
-                            view_count: e.videoDetails.viewCount,
-                        }}
-                        index={i}
-                        onClick={onItemClick}
-                        activeIndex={videoDataIndex}
-                    />
-                ))}
+                {videoList
+                    .sort((a, b) => {
+                        switch (sortBy) {
+                            case "name": {
+                                return a.videoDetails.title.localeCompare(b.videoDetails.title);
+                            }
+                            case "view": {
+                                return parseInt(a.videoDetails.viewCount) >
+                                    parseInt(b.videoDetails.viewCount)
+                                    ? 1
+                                    : -1;
+                            }
+                            case "length": {
+                                return a.videoDetails.lengthSeconds > b.videoDetails.lengthSeconds
+                                    ? 1
+                                    : -1;
+                            }
+                            default:
+                                return 1;
+                        }
+                    })
+                    .filter((e) =>
+                        e.videoDetails.title
+                            .toLowerCase()
+                            .includes(searchQuery.toLowerCase())
+                    )
+                    .map((e: any, i) => (
+                        <VidItem
+                            key={e.videoDetails.videoId}
+                            data={{
+                                title: e.videoDetails.title,
+                                thumbnails: e.videoDetails.thumbnails,
+                                id: e.videoDetails.videoId,
+                                length_seconds: e.videoDetails.lengthSeconds,
+                                view_count: e.videoDetails.viewCount,
+                            }}
+                            index={i}
+                            onClick={onItemClick}
+                            activeIndex={videoDataIndex}
+                        />
+                    ))}
             </div>
         </div>
     );
