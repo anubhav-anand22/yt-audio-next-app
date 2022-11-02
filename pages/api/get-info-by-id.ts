@@ -20,7 +20,7 @@ export default async function handler(
     data: {
       videoDetails: data.videoDetails,
       related_videos: data.related_videos,
-      url: data.formats.find(e => e.itag === 140)?.url
+      url: data?.formats?.filter((e: any) => e?.hasAudio && !e?.hasVideo)[0]?.url || ""
     },
     error: ""
   })

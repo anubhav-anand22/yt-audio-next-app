@@ -4,6 +4,7 @@ import ytdl from 'ytdl-core'
 type Data = {
   data?: any,
   error?: string,
+  format?: any,
 }
 
 export default async function handler(
@@ -28,7 +29,7 @@ export default async function handler(
     data: data.map((e: any) => {
         return {
             videoDetails: e?.videoDetails || {},
-            url: e?.formats?.find((e: any) => e.itag === 140)?.url || ""
+            url: e?.formats?.filter((e: any) => e?.hasAudio && !e?.hasVideo)[0]?.url || ""
           }
     }),
     error: ""
