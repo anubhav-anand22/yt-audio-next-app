@@ -1,7 +1,14 @@
 import axios from "axios";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState, useCallback, useEffect, FormEvent, useRef } from "react";
+import {
+    useState,
+    useCallback,
+    useEffect,
+    FormEvent,
+    useRef,
+    ChangeEvent,
+} from "react";
 import { useDispatch } from "react-redux";
 import AudioPlayer from "../Components/AudioPlayer";
 import VidItem from "../Components/VidItem";
@@ -27,6 +34,7 @@ const VideoListPlayer = () => {
                         message: "Getting ids from playlist",
                     })
                 );
+                setSortBy("name");
 
                 const { data: idData } = await axios(
                     "/api/get-ids-from-playlist?id=" + id
@@ -131,7 +139,11 @@ const VideoListPlayer = () => {
 
                 dispatch(setLoading({ value: false, message: "" }));
 
-                setVideoList(vidData.data);
+                setVideoList(
+                    vidData.data.sort((a: any, b: any) =>
+                        a.videoDetails.title.localeCompare(b.videoDetails.title)
+                    )
+                );
             } catch (e) {
                 console.log(e);
                 dispatch(setLoading({ value: false, message: "" }));
@@ -174,8 +186,50 @@ const VideoListPlayer = () => {
 
     const onSearchSubmit = (e: FormEvent) => {
         e.preventDefault();
-        setSearchQuery(searchInpVal)
-    }
+        setSearchQuery(searchInpVal);
+    };
+
+    const sort = useCallback((e: any, by: string) => {
+        console.log(e)
+        return e.sort((a: any, b: any) => {
+            switch (by) {
+                case "name": {
+                    return a.videoDetails.title.localeCompare(
+                        b.videoDetails.title
+                    );
+                }
+                case "view": {
+                    return parseInt(a.videoDetails.viewCount) >
+                        parseInt(b.videoDetails.viewCount)
+                        ? 1
+                        : -1;
+                }
+                case "length": {
+                    return a.videoDetails.lengthSeconds >
+                        b.videoDetails.lengthSeconds
+                        ? 1
+                        : -1;
+                }
+                case "date": {
+                    return a.videoDetails.uploadDate.localeCompare(b.videoDetails.uploadDate)
+                }
+                case "owner": {
+                    return a.videoDetails.ownerChannelName.localeCompare(b.videoDetails.ownerChannelName)
+                }
+                case "category": {
+                    return a.videoDetails.category.localeCompare(b.videoDetails.category)
+                }
+                default:
+                    return 1;
+            }
+        });
+    }, []);
+
+    const onSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        const value = e.currentTarget.value;
+        setSortBy(value);
+        setVideoList((pre) => sort(pre, value));
+    };
 
     return (
         <div>
@@ -197,13 +251,13 @@ const VideoListPlayer = () => {
             )}
             <div className={style.controlCont}>
                 <div>
-                    <select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.currentTarget.value)}
-                    >
+                    <select value={sortBy} onChange={onSelectChange}>
                         <option value="name">By name</option>
                         <option value="view">By view count</option>
                         <option value="length">By video length</option>
+                        <option value="owner">By video owner</option>
+                        <option value="date">By upload date</option>
+                        <option value="category">By category</option>
                     </select>
                 </div>
                 <div>
@@ -213,8 +267,9 @@ const VideoListPlayer = () => {
                             placeholder="Search"
                             value={searchInpVal}
                             onChange={(e) => {
-                                if(e.currentTarget.value === '') setSearchQuery("")
-                                setSearchInpVal(e.currentTarget.value)
+                                if (e.currentTarget.value === "")
+                                    setSearchQuery("");
+                                setSearchInpVal(e.currentTarget.value);
                             }}
                         />
                         <button>Go</button>
@@ -223,26 +278,6 @@ const VideoListPlayer = () => {
             </div>
             <div className={style.itemCont}>
                 {videoList
-                    .sort((a, b) => {
-                        switch (sortBy) {
-                            case "name": {
-                                return a.videoDetails.title.localeCompare(b.videoDetails.title);
-                            }
-                            case "view": {
-                                return parseInt(a.videoDetails.viewCount) >
-                                    parseInt(b.videoDetails.viewCount)
-                                    ? 1
-                                    : -1;
-                            }
-                            case "length": {
-                                return a.videoDetails.lengthSeconds > b.videoDetails.lengthSeconds
-                                    ? 1
-                                    : -1;
-                            }
-                            default:
-                                return 1;
-                        }
-                    })
                     .filter((e) =>
                         e.videoDetails.title
                             .toLowerCase()
