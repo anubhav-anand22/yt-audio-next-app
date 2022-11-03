@@ -13,6 +13,10 @@
     padding: 10px;
 }
 
+.controlCont > div:nth-child(2) {
+    margin-top: 10px;
+}
+
 .controlCont > div:nth-child(1) select {
     padding: 10px;
     width: 95vw;
@@ -71,6 +75,9 @@
     }
     .controlCont > div:nth-child(2) form {
         width: 250px;
+    }
+    .controlCont > div:nth-child(2) {
+        margin-top: 0px;
     }
 }
 
