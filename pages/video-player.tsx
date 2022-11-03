@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addNotification } from "../store/notificationSlice";
 import axios from "axios";
@@ -18,6 +18,29 @@ export default function VideoList() {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchInpVal, setSearchInpVal] = useState("");
 
+    const sort = useCallback((e: any, by: string) => {
+        return e.sort((a: any, b: any) => {
+            switch (by) {
+                case "name": {
+                    return a.title.localeCompare(b.title);
+                }
+                case "view": {
+                    return parseInt(a.view_count) >
+                        parseInt(b.view_count)
+                        ? 1
+                        : -1;
+                }
+                case "length": {
+                    return a.length_seconds > b.length_seconds
+                        ? 1
+                        : -1;
+                }
+                default:
+                    return 1;
+            }
+        })
+    }, [])
+
     const loadData = useCallback(
         async (id: string) => {
             try {
@@ -27,6 +50,7 @@ export default function VideoList() {
                         message: "fetching video information",
                     })
                 );
+                setSortBy('name')
                 const { data } = await axios(
                     "/api/get-info-by-id?id=" + id.slice(0, 11)
                 );
@@ -50,18 +74,18 @@ export default function VideoList() {
 
                 setVideoData(vData);
 
-                setRelatedVid(
-                    data.data.related_videos.map((e: any) => {
-                        return {
-                            title: e.title,
-                            owner: e.author.name,
-                            thumbnails: e.thumbnails,
-                            length_seconds: e.length_seconds,
-                            view_count: e.view_count,
-                            id: e.id,
-                        };
-                    })
-                );
+                const relData = data.data.related_videos.map((e: any) => {
+                    return {
+                        title: e.title,
+                        owner: e.author.name,
+                        thumbnails: e.thumbnails,
+                        length_seconds: e.length_seconds,
+                        view_count: e.view_count,
+                        id: e.id,
+                    };
+                }).sort((a: any, b: any) => a.title.localeCompare(b.title))
+
+                setRelatedVid(relData);
                 dispatch(
                     setLoading({
                         value: false,
@@ -115,6 +139,12 @@ export default function VideoList() {
         setSearchQuery(searchInpVal)
     }
 
+    const onSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        const value = e.currentTarget.value;
+        setSortBy(value);
+        setRelatedVid(pre => sort(pre, value))
+    }
+
     return (
         <div>
             <Head>
@@ -131,7 +161,7 @@ export default function VideoList() {
                 <div>
                     <select
                         value={sortBy}
-                        onChange={(e) => setSortBy(e.currentTarget.value)}
+                        onChange={onSelectChange}
                     >
                         <option value="name">By name</option>
                         <option value="view">By view count</option>
@@ -155,26 +185,6 @@ export default function VideoList() {
             </div>
             <div className={style.itemCont}>
                 {relatedVid
-                    .sort((a, b) => {
-                        switch (sortBy) {
-                            case "name": {
-                                return a.title.localeCompare(b.title);
-                            }
-                            case "view": {
-                                return parseInt(a.view_count) >
-                                    parseInt(b.view_count)
-                                    ? 1
-                                    : -1;
-                            }
-                            case "length": {
-                                return a.length_seconds > b.length_seconds
-                                    ? 1
-                                    : -1;
-                            }
-                            default:
-                                return 1;
-                        }
-                    })
                     .filter(e => e.title.toLowerCase().includes(searchQuery.toLowerCase()))
                     .map((e, i) => (
                         <VidItem
