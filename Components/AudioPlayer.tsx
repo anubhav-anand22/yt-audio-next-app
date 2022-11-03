@@ -99,9 +99,6 @@ const AudioPlayer = ({ data, next, previous }: AudioPlayerProps) => {
 
     const onLoadedMetadata = () => {
         setDuration(audioEl.current?.duration || 0);
-        setTimeout(() => {
-            audioEl.current?.play();
-        }, 100);
     };
 
     const downloadHandler = () => {
@@ -127,6 +124,7 @@ const AudioPlayer = ({ data, next, previous }: AudioPlayerProps) => {
                 onEnded={onEnd}
                 onTimeUpdate={onTimeUpdate}
                 onLoadedMetadata={onLoadedMetadata}
+                autoPlay
             ></audio>
             <div className={style.playerBack}>
                 <div className={style.playerBackBackBtnCont}>
