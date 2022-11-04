@@ -67,14 +67,14 @@ const AudioPlayer = ({ data, next, previous }: AudioPlayerProps) => {
     };
 
     const setPlaybackHandler = (type: negativePositiveType) => {
-        let nextVal = audioEl.current?.playbackRate ?? 1
-        if(type === "+") {
-            nextVal = (nextVal + 0.25) > 8 ? 8 : nextVal + 0.25
+        let nextVal = audioEl.current?.playbackRate ?? 1;
+        if (type === "+") {
+            nextVal = nextVal + 0.25 > 8 ? 8 : nextVal + 0.25;
         } else {
-            nextVal = (nextVal - 0.25) < 0 ? 0 : nextVal - 0.25
+            nextVal = nextVal - 0.25 < 0 ? 0 : nextVal - 0.25;
         }
-        if(audioEl.current?.playbackRate !== undefined) {
-            const a = `${nextVal}`.split('.');
+        if (audioEl.current?.playbackRate !== undefined) {
+            const a = `${nextVal}`.split(".");
             nextVal = parseFloat(`${a[0]}.${a[1] ? a[1].slice(0, 2) : 0}`);
             dispatch(
                 addNotification({
@@ -86,7 +86,7 @@ const AudioPlayer = ({ data, next, previous }: AudioPlayerProps) => {
             );
             audioEl.current.playbackRate = nextVal;
         }
-    }
+    };
 
     const onEnd = () => {
         setIsPlaying(false);
@@ -97,17 +97,53 @@ const AudioPlayer = ({ data, next, previous }: AudioPlayerProps) => {
         setCurrentTime(audioEl.current?.currentTime || 0);
     };
 
-    const onLoadedMetadata = () => {
+    const onLoadedMetadata = async () => {
         setDuration(audioEl.current?.duration || 0);
+        const img = data.thumbnails.map(e => {
+            return {
+                src: e.url,
+                sizes: e.width + "x" + e.height,
+                type: "image/png"
+            }
+        })
+
+        if ("mediaSession" in navigator) {
+            const mediaMetaData = {
+                title: data.title,
+                artist: data.author.name,
+                artwork: img
+            }
+            console.log(mediaMetaData)
+            navigator.mediaSession.metadata = new MediaMetadata(mediaMetaData);
+            navigator.mediaSession.setActionHandler("play", () => {
+                audioEl.current?.play()
+            });
+            navigator.mediaSession.setActionHandler("pause", () => {
+                audioEl.current?.pause();
+            });
+            navigator.mediaSession.setActionHandler("nexttrack", next);
+            navigator.mediaSession.setActionHandler("previoustrack", previous);
+            navigator.mediaSession.setActionHandler("seekbackward", () => {
+                const t = audioEl.current?.currentTime || 0
+                if(!audioEl.current?.currentTime) return
+                audioEl.current.currentTime = t > 10 ? t - 10 : 0
+            });
+            navigator.mediaSession.setActionHandler("seekforward", () => {
+                const t = audioEl.current?.currentTime || 0
+                const d = audioEl.current?.duration || 0
+                if(!audioEl.current?.currentTime) return
+                audioEl.current.currentTime = t > (d - 10) ? d : t + 10
+            });
+        }
     };
 
     const downloadHandler = () => {
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = data.audioUrl;
         a.target = "_black";
-        a.download = data.title + ".mp3"
+        a.download = data.title + ".mp3";
         a.click();
-    }
+    };
 
     return (
         <div
