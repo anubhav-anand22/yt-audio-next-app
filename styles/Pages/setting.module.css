@@ -1,0 +1,67 @@
+.settingPage {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  align-items: center;
+}
+
+.itemRange,
+.itemBool {
+  display: flex;
+  justify-content: space-between;
+  width: 95vw;
+  background-color: var(--item-background-color);
+  padding: 7px;
+  border-radius: 10px;
+  align-items: center;
+  color: var(--black);
+  height: 46px;
+  margin-top: 15px;
+}
+
+.itemBool button {
+  min-width: 100px;
+  padding: 7px 15px;
+  border-width: 0px;
+  border-radius: 7px;
+  font-size: 16px;
+}
+
+.itemRangeRangeCont {
+  display: flex;
+  align-items: center;
+}
+
+.itemRangeRangeCont p {
+  font-size: 12px;
+}
+
+.itemRangeRangeCont input {
+    width: 150px;
+    margin: auto 5px;
+}
+
+.itemRangeRangeCont input {
+  -webkit-appearance: none;
+}
+
+.itemRangeRangeCont input::-webkit-slider-runnable-track {
+  height: 6px;
+  background: var(--trackColor);
+  border: none;
+  border-radius: 2px;
+}
+
+.itemRangeRangeCont input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 22px;
+  width: 10px;
+  border-radius: 5px;
+  background: var(--action-color);
+  margin-top: -7px;
+}
+
+.itemRangeRangeCont input:focus {
+  outline: none;
+}

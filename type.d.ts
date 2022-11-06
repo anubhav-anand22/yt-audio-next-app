@@ -1,6 +1,7 @@
 interface GStateType {
     isLoading: {value: boolean, message: string};
     notification: NotificationSliceType[];
+    setting: DefaultSetting
 }
 
 interface NotificationSliceType {
@@ -106,4 +107,8 @@ interface VideoDetailsType {
     chapters: any[];
     thumbnails: VideoDetailsThumbnail2[];
     audioUrl: string;
+}
+
+interface DefaultSetting {
+    isDark: boolean
 }
