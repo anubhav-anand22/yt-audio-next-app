@@ -15,6 +15,7 @@ import { setLoading } from "../store/isLoadingSlice";
 import style from "../styles/Pages/video-player.module.css";
 import AudioPlayer from "../Components/AudioPlayer";
 import Head from "next/head";
+import { dataDb } from "../db/dataDb";
 
 export default function VideoList() {
   const router = useRouter();
@@ -54,32 +55,65 @@ export default function VideoList() {
           })
         );
         setSortBy("name");
-        const { data } = await axios.get(
-          "/api/get-info-by-id?id=" + id.slice(0, 11),
-          {
-            signal: abortController.current.signal,
-          }
-        );
 
-        if (data?.error || !data.data) {
-          dispatch(
-            addNotification({
-              id: Math.random().toString(),
-              message: "Something went wrong while fetching video data",
-              title: "Error",
-              type: "danger",
-            })
+        const storedData = await dataDb.videoItem.get(id);
+        let resData: VieoItemResDataRootObject | undefined;
+        const t = new Date().getTime();
+
+        console.log({ storedData });
+
+        if (storedData && storedData.expires > t) {
+          resData = storedData.data;
+        } else {
+          if(storedData) {
+            dataDb.videoItem.delete(id);
+          }
+
+          const { data } = await axios.get(
+            "/api/get-info-by-id?id=" + id.slice(0, 11),
+            {
+              signal: abortController.current.signal,
+            }
           );
+
+          if (data?.error || !data.data) {
+            dispatch(
+              addNotification({
+                id: Math.random().toString(),
+                message: "Something went wrong while fetching video data",
+                title: "Error",
+                type: "danger",
+              })
+            );
+          }
+
+          resData = data.data;
+          if (resData) {
+            dataDb.videoItem.add({
+              data: resData,
+              expires:
+                parseInt(
+                  resData.url
+                    .split("?")[1]
+                    .split("&")
+                    .find((e: string) => e.includes("expire="))
+                    ?.replace("expire=", "") + "000"
+                ) - 900000 || 0,
+                videoId: id,
+            });
+          }
         }
 
+        if (!resData) return;
+
         const vData = {
-          ...data.data.videoDetails,
-          audioUrl: data.data.url,
+          ...resData.videoDetails,
+          audioUrl: resData.url,
         };
 
         setVideoData(vData);
 
-        const relData = data.data.related_videos
+        const relData = resData.related_videos
           .map((e: any) => {
             return {
               title: e.title,
@@ -203,3 +237,82 @@ export default function VideoList() {
     </div>
   );
 }
+
+/*
+
+const loadData = useCallback(
+    async (id: string) => {
+      try {
+        dispatch(
+          setLoading({
+            value: true,
+            message: "fetching video information",
+          })
+        );
+        setSortBy("name");
+        const { data } = await axios.get(
+          "/api/get-info-by-id?id=" + id.slice(0, 11),
+          {
+            signal: abortController.current.signal,
+          }
+        );
+
+        if (data?.error || !data.data) {
+          dispatch(
+            addNotification({
+              id: Math.random().toString(),
+              message: "Something went wrong while fetching video data",
+              title: "Error",
+              type: "danger",
+            })
+          );
+        }
+
+        const vData = {
+          ...data.data.videoDetails,
+          audioUrl: data.data.url,
+        };
+
+        setVideoData(vData);
+
+        const relData = data.data.related_videos
+          .map((e: any) => {
+            return {
+              title: e.title,
+              owner: e.author.name,
+              thumbnails: e.thumbnails,
+              length_seconds: e.length_seconds,
+              view_count: e.view_count,
+              id: e.id,
+            };
+          })
+          .sort((a: any, b: any) => a.title.localeCompare(b.title));
+
+        setRelatedVid(relData);
+        dispatch(
+          setLoading({
+            value: false,
+            message: "",
+          })
+        );
+      } catch (e) {
+        console.log(e);
+        dispatch(
+          setLoading({
+            value: false,
+            message: "",
+          })
+        );
+        dispatch(
+          addNotification({
+            id: Math.random().toString(),
+            message: "Something went wrong while fetching video information",
+            title: "Error",
+            type: "danger",
+          })
+        );
+      }
+    },
+    [dispatch]
+  );
+*/
