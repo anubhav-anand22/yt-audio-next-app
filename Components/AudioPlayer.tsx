@@ -145,6 +145,12 @@ const AudioPlayer = ({ data, next, previous }: AudioPlayerProps) => {
         a.click();
     };
 
+    const onAudioError = (e: HTMLAudioElement) => {
+        if(e.src){
+            e.src = `/api/get-audio-by-id?id=${data.videoId}`
+        }
+    }
+
     return (
         <div
             className={`${style.player} ${
@@ -161,6 +167,7 @@ const AudioPlayer = ({ data, next, previous }: AudioPlayerProps) => {
                 onTimeUpdate={onTimeUpdate}
                 onLoadedMetadata={onLoadedMetadata}
                 autoPlay
+                onError={(e) => onAudioError(e.currentTarget)}
             ></audio>
             <div className={style.playerBack}>
                 <div className={style.playerBackBackBtnCont}>
