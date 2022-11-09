@@ -113,7 +113,7 @@ export default function VideoList() {
 
         setVideoData(vData);
 
-        const relData = resData.related_videos
+        const relData = (resData?.related_videos || [])
           .map((e: any) => {
             return {
               title: e.title,
