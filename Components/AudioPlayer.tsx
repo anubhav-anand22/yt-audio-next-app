@@ -147,7 +147,8 @@ const AudioPlayer = ({ data, next, previous }: AudioPlayerProps) => {
 
     const onAudioError = (e: HTMLAudioElement) => {
         if(e.src){
-            e.src = `/api/get-audio-by-id?id=${data.videoId}`
+            const urlObj = new URL(location.href)
+            e.src = `${urlObj.protocol}//${urlObj.host}${urlObj.port ? ":" + urlObj.port : ""}/api/get-audio-by-id?id=${data.videoId}`
         }
     }
 
