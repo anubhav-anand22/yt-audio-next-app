@@ -12,6 +12,7 @@ import {
 import { useDispatch } from "react-redux";
 import AudioPlayer from "../Components/AudioPlayer";
 import VidItem from "../Components/VidItem";
+import { dataDb } from "../db/dataDb";
 import { setLoading } from "../store/isLoadingSlice";
 import { addNotification } from "../store/notificationSlice";
 import style from "../styles/Pages/video-list-player.module.css";
@@ -63,23 +64,17 @@ const VideoListPlayer = () => {
           })
         );
 
-        let vidData: any;
+        let vidData: VieoItemResDataRootObject[];
 
-        const storedDataJson = localStorage.getItem("YTA_YTD_DATA");
-        const storedData = JSON.parse(
-          storedDataJson ||
-            `{"ids": "", "vidDataStored": {"data": [], "error": ""}, "ListId": "", "expires": 0}`
-        );
         const date = new Date().getTime();
+        const storedData = await dataDb.videoDetails.get(id);
 
         if (
-          storedDataJson &&
           storedData &&
-          storedData?.expires !== 0 &&
-          storedData?.expires > date &&
-          storedData?.ListId === id
+          storedData.expires > date &&
+          storedData.listId === id
         ) {
-          vidData = storedData.vidDataStored;
+          vidData = storedData.data;
         } else {
           dispatch(
             setLoading({
@@ -115,36 +110,49 @@ const VideoListPlayer = () => {
             );
           }
 
-          let data: any = [];
+          let data: VieoItemResDataRootObject[] = [];
 
           for (let i of output) {
             data = [...data, ...i.data.data];
           }
 
-          vidData = { data, error: "" };
+          vidData = data;
 
-          localStorage.setItem(
-            "YTA_YTD_DATA",
-            JSON.stringify({
-              ids: idData.data.sort().join("+"),
-              vidDataStored: vidData,
-              ListId: id,
-              expires:
-                parseInt(
-                  vidData.data[0].url
-                    .split("?")[1]
-                    .split("&")
-                    .find((e: string) => e.includes("expire="))
-                    .split("=")[1] + "000"
-                ) - 900000,
-            })
-          );
+          //   localStorage.setItem(
+          //     "YTA_YTD_DATA",
+          //     JSON.stringify({
+          //       ids: idData.data.sort().join("+"),
+          //       vidDataStored: vidData,
+          //       ListId: id,
+          //       expires:
+          //         parseInt(
+          //           vidData.data[0].url
+          //             .split("?")[1]
+          //             .split("&")
+          //             .find((e: string) => e.includes("expire="))
+          //             .split("=")[1] + "000"
+          //         ) - 900000,
+          //     })
+          //   );
+
+          dataDb.videoDetails.add({
+            data: data,
+            listId: id,
+            expires:
+              parseInt(
+                data[0].url
+                  .split("?")[1]
+                  .split("&")
+                  .find((e: string) => e.includes("expire="))
+                  ?.replace("expire=", "") + "000"
+              ) - 900000 || 0,
+          });
         }
 
         dispatch(setLoading({ value: false, message: "" }));
 
         setVideoList(
-          vidData.data.sort((a: any, b: any) =>
+          vidData.sort((a: any, b: any) =>
             a.videoDetails.title.localeCompare(b.videoDetails.title)
           )
         );
