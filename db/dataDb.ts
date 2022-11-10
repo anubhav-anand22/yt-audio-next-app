@@ -6,7 +6,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('myDatabase');
-    this.version(2).stores({
+    this.version(3).stores({
         videoItem: 'videoId',
         videoDetails: "listId"
     });
