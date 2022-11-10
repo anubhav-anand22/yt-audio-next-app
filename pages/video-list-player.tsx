@@ -31,6 +31,7 @@ const VideoListPlayer = () => {
   const loadData = useCallback(
     async (id: string) => {
       try {
+        const joinIds = (a: string[]) => a.sort((a, b) => a.localeCompare(b)).join("")
         dispatch(
           setLoading({
             value: true,
@@ -72,10 +73,13 @@ const VideoListPlayer = () => {
         if (
           storedData &&
           storedData.expires > date &&
-          storedData.listId === id
+          storedData.ids === joinIds(idData.data)
         ) {
           vidData = storedData.data;
         } else {
+          if(storedData){
+            dataDb.videoDetails.delete(id);
+          }
           dispatch(
             setLoading({
               value: true,
@@ -118,23 +122,6 @@ const VideoListPlayer = () => {
 
           vidData = data;
 
-          //   localStorage.setItem(
-          //     "YTA_YTD_DATA",
-          //     JSON.stringify({
-          //       ids: idData.data.sort().join("+"),
-          //       vidDataStored: vidData,
-          //       ListId: id,
-          //       expires:
-          //         parseInt(
-          //           vidData.data[0].url
-          //             .split("?")[1]
-          //             .split("&")
-          //             .find((e: string) => e.includes("expire="))
-          //             .split("=")[1] + "000"
-          //         ) - 900000,
-          //     })
-          //   );
-
           dataDb.videoDetails.add({
             data: data,
             listId: id,
@@ -146,6 +133,7 @@ const VideoListPlayer = () => {
                   .find((e: string) => e.includes("expire="))
                   ?.replace("expire=", "") + "000"
               ) - 900000 || 0,
+              ids: joinIds(idData.data)
           });
         }
 
