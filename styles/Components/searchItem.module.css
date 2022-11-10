@@ -1,0 +1,30 @@
+.channelName {
+    font-size: 12px;
+    padding: 5px 10px
+}
+
+.title {
+    font-size: 16px;
+    padding: 5px 10px;
+}
+
+.listIndicator {
+    position: absolute;
+    width: 40%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 0;
+}
+
+.item {
+    position: relative;
+}
+
+.icon {
+    width: 60%;
+    height: 60%;
+}
