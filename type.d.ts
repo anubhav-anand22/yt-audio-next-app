@@ -249,20 +249,21 @@ interface VideoDetailsDataDbObj {
   data: VieoItemResDataRootObject[];
   listId: string;
   expires: number;
+  ids: string;
 }
 
 // search type start
 
 interface SearchItemTypeRootObj {
-  data: Daum[];
+  data: SearchItemTypeItem[];
   error: string;
 }
 
-interface SearchItemTypeDaum {
+interface SearchItemTypeItem {
   kind: string;
   etag: string;
-  id: Id;
-  snippet: Snippet;
+  id: SearchItemTypeId;
+  snippet: SearchItemTypeSnippet;
 }
 
 interface SearchItemTypeId {
@@ -276,16 +277,16 @@ interface SearchItemTypeSnippet {
   channelId: string;
   title: string;
   description: string;
-  thumbnails: Thumbnails;
+  thumbnails: SearchItemTypeThumbnails;
   channelTitle: string;
   liveBroadcastContent: string;
   publishTime: string;
 }
 
 interface SearchItemTypeThumbnails {
-  default: Default;
-  medium: Medium;
-  high: High;
+  default: SearchItemTypeDefault;
+  medium: SearchItemTypeMedium;
+  high: SearchItemTypeHigh;
 }
 
 interface SearchItemTypeDefault {
@@ -304,6 +305,34 @@ interface SearchItemTypeHigh {
   url: string;
   width: number;
   height: number;
+}
+
+interface SearchItemThumbnailItem {
+  url: string;
+  width: number;
+  height: number;
+}
+
+type SearchItemTypetype = "video" | "playlist"
+
+interface SearchItemTypeData {
+  title: string;
+    id: string;
+    type: SearchItemTypetype;
+    channelTitle: string;
+    channelId: string;
+    description: string;
+    publishTime: string;
+    thumbnails: {
+      default: SearchItemThumbnailItem;
+      medium: SearchItemThumbnailItem;
+      high: SearchItemThumbnailItem;
+    };
+}
+
+interface SearchItemType {
+  data: SearchItemTypeData;
+  onClick(type: SearchItemTypetype, id: string): void;
 }
 
 // search type end
