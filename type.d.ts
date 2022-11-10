@@ -240,9 +240,9 @@ interface VieoItemResDataRootObject {
 }
 
 interface VieoItemResDataDbObj {
-    data: VieoItemResDataRootObject;
-    expires: number;
-    videoId: string;
+  data: VieoItemResDataRootObject;
+  expires: number;
+  videoId: string;
 }
 
 interface VideoDetailsDataDbObj {
@@ -250,3 +250,60 @@ interface VideoDetailsDataDbObj {
   listId: string;
   expires: number;
 }
+
+// search type start
+
+interface SearchItemTypeRootObj {
+  data: Daum[];
+  error: string;
+}
+
+interface SearchItemTypeDaum {
+  kind: string;
+  etag: string;
+  id: Id;
+  snippet: Snippet;
+}
+
+interface SearchItemTypeId {
+  kind: string;
+  videoId?: string;
+  playlistId?: string;
+}
+
+interface SearchItemTypeSnippet {
+  publishedAt: string;
+  channelId: string;
+  title: string;
+  description: string;
+  thumbnails: Thumbnails;
+  channelTitle: string;
+  liveBroadcastContent: string;
+  publishTime: string;
+}
+
+interface SearchItemTypeThumbnails {
+  default: Default;
+  medium: Medium;
+  high: High;
+}
+
+interface SearchItemTypeDefault {
+  url: string;
+  width: number;
+  height: number;
+}
+
+interface SearchItemTypeMedium {
+  url: string;
+  width: number;
+  height: number;
+}
+
+interface SearchItemTypeHigh {
+  url: string;
+  width: number;
+  height: number;
+}
+
+// search type end
