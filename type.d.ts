@@ -132,7 +132,7 @@ interface VieoItemResDataAuthor {
   channel_url: string;
   external_channel_url: string;
   user_url: string;
-  thumbnails: Thumbnail[];
+  thumbnails: VieoItemResDataThumbnail[];
   verified: boolean;
   subscriber_count: number;
 }
@@ -157,7 +157,7 @@ interface VieoItemResDataThumbnail2 {
 }
 
 interface VieoItemResDataVideoDetails {
-  embed: Embed;
+  embed: VieoItemResDataEmbed;
   title: string;
   description: string;
   lengthSeconds: string;
@@ -178,18 +178,18 @@ interface VieoItemResDataVideoDetails {
   isOwnerViewing: boolean;
   isCrawlable: boolean;
   allowRatings: boolean;
-  author: Author;
+  author: VieoItemResDataAuthor;
   isPrivate: boolean;
   isUnpluggedCorpus: boolean;
   isLiveContent: boolean;
-  media: Media;
+  media: VieoItemResDataMedia;
   likes?: any;
   dislikes?: any;
   age_restricted: boolean;
   video_url: string;
-  storyboards: Storyboard[];
+  storyboards: VieoItemResDataStoryboard[];
   chapters: any[];
-  thumbnails: Thumbnail2[];
+  thumbnails: VieoItemResDataThumbnail2[];
 }
 
 interface VieoItemResDataThumbnail3 {
@@ -204,7 +204,7 @@ interface VieoItemResDataAuthor2 {
   user: string;
   channel_url: string;
   user_url: string;
-  thumbnails: Thumbnail3[];
+  thumbnails: VieoItemResDataThumbnail3[];
   verified: boolean;
 }
 
@@ -224,18 +224,18 @@ interface VieoItemResDataRelatedVideo {
   id: string;
   title: string;
   published: string;
-  author: Author2;
+  author: VieoItemResDataAuthor2;
   short_view_count_text: string;
   view_count: string;
   length_seconds: number;
-  thumbnails: Thumbnail4[];
-  richThumbnails: RichThumbnail[];
+  thumbnails: VieoItemResDataThumbnail4[];
+  richThumbnails: VieoItemResDataRichThumbnail[];
   isLive: boolean;
 }
 
 interface VieoItemResDataRootObject {
-  videoDetails: VideoDetails;
-  related_videos?: RelatedVideo[] | undefined;
+  videoDetails: VieoItemResDataVideoDetails;
+  related_videos?: VieoItemResDataRelatedVideo[] | undefined;
   url: string;
 }
 
@@ -336,3 +336,26 @@ interface SearchItemType {
 }
 
 // search type end
+
+//History Db type start
+interface HistoryDbListType {
+  id: string;
+  title: string;
+  time: number;
+  thumbnail: string;
+}
+
+interface HistoryDbVideoType {
+  id: string;
+  title: string;
+  time: number;
+  thumbnail: string;
+  owner: string
+}
+
+interface HistoryDbSearchType {
+  query: string
+  time: number
+  freq: number
+}
+//History Db type end
