@@ -135,6 +135,12 @@ const VideoListPlayer = () => {
               ) - 900000 || 0,
               ids: joinIds(idData.data)
           });
+          dataDb.historyList.add({
+            id,
+            thumbnail: data[0].videoDetails.thumbnails[0].url,
+            time: new Date().getTime(),
+            title: data[0].videoDetails.title
+          })
         }
 
         dispatch(setLoading({ value: false, message: "" }));

@@ -101,6 +101,13 @@ export default function VideoList() {
                 ) - 900000 || 0,
                 videoId: id,
             });
+            dataDb.historyVideo.add({
+              id,
+              owner: resData.videoDetails.author.name,
+              thumbnail: resData.videoDetails.thumbnails[0].url,
+              time: new Date().getTime(),
+              title: resData.videoDetails.title
+            })
           }
         }
 
