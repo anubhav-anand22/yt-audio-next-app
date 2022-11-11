@@ -67,6 +67,8 @@
     width: 30px;
 }
 
+
+
 @media (min-width: 600px) {
     .nav {
         display: block;
@@ -75,7 +77,13 @@
         display: flex;
         list-style: none;
     }
+
+    .navMoreBtn {
+        background: transparent;
+        font-size: 16px;
+    }
     
+    .navMoreBtn,
     .navUl li {
         padding: 7px 10px;
         margin: 0 5px;
@@ -84,6 +92,7 @@
         transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
     }
     
+    .navMoreBtn:hover,
     .activePathLi,
     .navUl li:hover {
         background-color: var(--action-color);
