@@ -31,6 +31,10 @@ a {
   margin: 0;
 }
 
+abbr {
+  text-decoration: none;
+}
+
 html[data-theme="dark"] {
   color-scheme: dark;
 }
