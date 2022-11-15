@@ -44,9 +44,9 @@ const History = () => {
     if (type === "SEARCH") {
       router.push("/?q=" + val);
     } else if (type === "LIST") {
-      router.push("/video-player?vid=" + val);
+      router.push("/video-list-player?vid=" + val);
     } else if (type === "VIDEO") {
-      router.push("/video-list-player?list=" + val);
+      router.push("/video-player?list=" + val);
     }
   };
 
