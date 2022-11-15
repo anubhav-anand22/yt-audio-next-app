@@ -90,13 +90,14 @@
         border-radius: 18px;
         border: 2px solid var(--action-color);
         transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+        color: white;
     }
     
     .navMoreBtn:hover,
     .activePathLi,
     .navUl li:hover {
         background-color: var(--action-color);
-        color: rgb(5, 5, 5);
+        color: rgb(5, 5, 5) !important;
     }
     .drawrIcon {
         display: none;
