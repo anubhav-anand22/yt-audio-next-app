@@ -22,7 +22,7 @@ const VideoListPlayer = () => {
   const dispatch = useDispatch();
   const [videoDataIndex, setVideoDataIndex] = useState(0);
   const [videoList, setVideoList] = useState<any[]>([]);
-  const [sortBy, setSortBy] = useState("name");
+  const [sortBy, setSortBy] = useState("position");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchInpVal, setSearchInpVal] = useState("");
   const firstAbortController = useRef<AbortController>(new AbortController());
@@ -31,14 +31,15 @@ const VideoListPlayer = () => {
   const loadData = useCallback(
     async (id: string) => {
       try {
-        const joinIds = (a: string[]) => a.sort((a, b) => a.localeCompare(b)).join("")
+        const joinIds = (a: string[]) =>
+          a.sort((a, b) => a.localeCompare(b)).join("");
         dispatch(
           setLoading({
             value: true,
             message: "Getting ids from playlist",
           })
         );
-        setSortBy("name");
+        setSortBy("position");
 
         const { data: idData } = await axios.get(
           "/api/get-ids-from-playlist?id=" + id,
@@ -77,7 +78,7 @@ const VideoListPlayer = () => {
         ) {
           vidData = storedData.data;
         } else {
-          if(storedData){
+          if (storedData) {
             dataDb.videoDetails.delete(id);
           }
           dispatch(
@@ -120,7 +121,12 @@ const VideoListPlayer = () => {
             data = [...data, ...i.data.data];
           }
 
-          vidData = data;
+          vidData = data.map((e) => ({
+            ...e,
+            position: idData.data.findIndex(
+              (i: string) => i === e.videoDetails.videoId
+            ),
+          }));
 
           dataDb.videoDetails.add({
             data: data,
@@ -133,22 +139,20 @@ const VideoListPlayer = () => {
                   .find((e: string) => e.includes("expire="))
                   ?.replace("expire=", "") + "000"
               ) - 900000 || 0,
-              ids: joinIds(idData.data)
+            ids: joinIds(idData.data),
           });
           dataDb.historyList.add({
             id,
             thumbnail: data[0].videoDetails.thumbnails[0].url,
             time: new Date().getTime(),
-            title: data[0].videoDetails.title
-          })
+            title: data[0].videoDetails.title,
+          });
         }
 
         dispatch(setLoading({ value: false, message: "" }));
 
         setVideoList(
-          vidData.sort((a: any, b: any) =>
-            a.videoDetails.title.localeCompare(b.videoDetails.title)
-          )
+          vidData.sort((a: any, b: any) => (a.position > b.position ? 1 : -1))
         );
       } catch (e) {
         console.log(e);
@@ -230,6 +234,9 @@ const VideoListPlayer = () => {
         case "category": {
           return a.videoDetails.category.localeCompare(b.videoDetails.category);
         }
+        case "position": {
+          return a.position > b.position ? 1 : -1;
+        }
         default:
           return 1;
       }
@@ -268,6 +275,7 @@ const VideoListPlayer = () => {
             <option value="owner">By video owner</option>
             <option value="date">By upload date</option>
             <option value="category">By category</option>
+            <option value="position">By position</option>
           </select>
         </div>
         <div>
