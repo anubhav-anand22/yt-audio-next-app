@@ -9,7 +9,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super('myDatabase');
-    this.version(4).stores({
+    this.version(5).stores({
         videoItem: 'videoId',
         videoDetails: "listId",
         historyList: 'id, title',
