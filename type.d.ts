@@ -237,6 +237,7 @@ interface VieoItemResDataRootObject {
   videoDetails: VieoItemResDataVideoDetails;
   related_videos?: VieoItemResDataRelatedVideo[] | undefined;
   url: string;
+  position?: number;
 }
 
 interface VieoItemResDataDbObj {
