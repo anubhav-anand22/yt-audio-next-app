@@ -21,7 +21,7 @@ const VideoListPlayer = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [videoDataIndex, setVideoDataIndex] = useState(0);
-  const [videoList, setVideoList] = useState<any[]>([]);
+  const [videoList, setVideoList] = useState<VieoItemResDataRootObject[]>([]);
   const [sortBy, setSortBy] = useState("position");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchInpVal, setSearchInpVal] = useState("");
@@ -55,6 +55,12 @@ const VideoListPlayer = () => {
               message: "Something went wrong while fetching video data",
               title: "Error",
               type: "danger",
+            })
+          );
+          dispatch(
+            setLoading({
+              value: false,
+              message: "",
             })
           );
         }
@@ -129,11 +135,11 @@ const VideoListPlayer = () => {
           }));
 
           dataDb.videoDetails.add({
-            data: data,
+            data: vidData,
             listId: id,
             expires:
               parseInt(
-                data[0].url
+                vidData[0].url
                   .split("?")[1]
                   .split("&")
                   .find((e: string) => e.includes("expire="))
@@ -143,9 +149,9 @@ const VideoListPlayer = () => {
           });
           dataDb.historyList.add({
             id,
-            thumbnail: data[0].videoDetails.thumbnails[0].url,
+            thumbnail: vidData[0].videoDetails.thumbnails[0].url,
             time: new Date().getTime(),
-            title: data[0].videoDetails.title,
+            title: vidData[0].videoDetails.title,
           });
         }
 
@@ -155,7 +161,6 @@ const VideoListPlayer = () => {
           vidData.sort((a: any, b: any) => (a.position > b.position ? 1 : -1))
         );
       } catch (e) {
-        console.log(e);
         dispatch(setLoading({ value: false, message: "" }));
       }
     },
@@ -163,6 +168,7 @@ const VideoListPlayer = () => {
   );
 
   useEffect(() => {
+    console.log("init");
     const id = router.query?.list;
     if (!id) return;
     if (typeof id === "string") {
@@ -203,7 +209,7 @@ const VideoListPlayer = () => {
     setSearchQuery(searchInpVal);
   };
 
-  const sort = useCallback((e: any, by: string) => {
+  const sort = (e: VieoItemResDataRootObject[], by: string) => {
     console.log(e);
     return e.sort((a: any, b: any) => {
       switch (by) {
@@ -241,7 +247,7 @@ const VideoListPlayer = () => {
           return 1;
       }
     });
-  }, []);
+  }
 
   const onSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.currentTarget.value;
@@ -269,13 +275,13 @@ const VideoListPlayer = () => {
       <div className={style.controlCont}>
         <div>
           <select value={sortBy} onChange={onSelectChange}>
+            <option value="position">By position</option>
             <option value="name">By name</option>
             <option value="view">By view count</option>
             <option value="length">By video length</option>
             <option value="owner">By video owner</option>
             <option value="date">By upload date</option>
             <option value="category">By category</option>
-            <option value="position">By position</option>
           </select>
         </div>
         <div>
