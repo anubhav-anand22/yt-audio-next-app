@@ -314,21 +314,21 @@ interface SearchItemThumbnailItem {
   height: number;
 }
 
-type SearchItemTypetype = "video" | "playlist"
+type SearchItemTypetype = "video" | "playlist";
 
 interface SearchItemTypeData {
   title: string;
-    id: string;
-    type: SearchItemTypetype;
-    channelTitle: string;
-    channelId: string;
-    description: string;
-    publishTime: string;
-    thumbnails: {
-      default: SearchItemThumbnailItem;
-      medium: SearchItemThumbnailItem;
-      high: SearchItemThumbnailItem;
-    };
+  id: string;
+  type: SearchItemTypetype;
+  channelTitle: string;
+  channelId: string;
+  description: string;
+  publishTime: string;
+  thumbnails: {
+    default: SearchItemThumbnailItem;
+    medium: SearchItemThumbnailItem;
+    high: SearchItemThumbnailItem;
+  };
 }
 
 interface SearchItemType {
@@ -351,12 +351,19 @@ interface HistoryDbVideoType {
   title: string;
   time: number;
   thumbnail: string;
-  owner: string
+  owner: string;
+}
+
+interface FavDbVideoType {
+  id: string;
+  title: string;
+  thumbnail: string;
+  owner: string;
 }
 
 interface HistoryDbSearchType {
-  query: string
-  time: number
-  freq: number
+  query: string;
+  time: number;
+  freq: number;
 }
 //History Db type end
