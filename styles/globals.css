@@ -8,7 +8,8 @@
   --drawer-main-back: #f7fff7;
   --item-background-color: rgb(211, 211, 211);
   --bg: #f7fff7;
-  --trackColor: #efefef
+  --bg2: #dbdbdb;
+  --trackColor: #efefef;
 }
 
 html,
@@ -49,5 +50,6 @@ html[data-theme="dark"] body {
   --drawer-main-back: #292f36;
   --item-background-color: #0e1013;
   --bg: #292f36;
+  --bg2: #1f242b;
   --trackColor: #6b6b6b;
 }
