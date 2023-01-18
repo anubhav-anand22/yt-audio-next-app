@@ -65,7 +65,7 @@ export default function VideoList() {
         if (storedData && storedData.expires > t) {
           resData = storedData.data;
         } else {
-          if(storedData) {
+          if (storedData) {
             dataDb.videoItem.delete(id);
           }
 
@@ -99,15 +99,24 @@ export default function VideoList() {
                     .find((e: string) => e.includes("expire="))
                     ?.replace("expire=", "") + "000"
                 ) - 900000 || 0,
-                videoId: id,
+              videoId: id,
             });
-            dataDb.historyVideo.add({
-              id,
-              owner: resData.videoDetails.author.name,
-              thumbnail: resData.videoDetails.thumbnails[0].url,
-              time: new Date().getTime(),
-              title: resData.videoDetails.title
-            })
+            const hisVidData = await dataDb.historyVideo.get(id);
+            if (hisVidData && hisVidData.id) {
+              dataDb.historyVideo.update(id, {
+                thumbnail: resData.videoDetails.thumbnails[0].url,
+                time: new Date().getTime(),
+                title: resData.videoDetails.title,
+              });
+            } else {
+              dataDb.historyVideo.add({
+                id,
+                owner: resData.videoDetails.author.name,
+                thumbnail: resData.videoDetails.thumbnails[0].url,
+                time: new Date().getTime(),
+                title: resData.videoDetails.title,
+              });
+            }
           }
         }
 
