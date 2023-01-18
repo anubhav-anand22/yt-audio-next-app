@@ -9,6 +9,7 @@ import {
   useRef,
   ChangeEvent,
 } from "react";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import AudioPlayer from "../Components/AudioPlayer";
 import VidItem from "../Components/VidItem";
@@ -27,6 +28,7 @@ const VideoListPlayer = () => {
   const [searchInpVal, setSearchInpVal] = useState("");
   const firstAbortController = useRef<AbortController>(new AbortController());
   const secondAbortController = useRef<AbortController>(new AbortController());
+  const [isFavList, setIsFavList] = useState(false);
 
   const loadData = useCallback(
     async (id: string) => {
@@ -147,12 +149,21 @@ const VideoListPlayer = () => {
               ) - 900000 || 0,
             ids: joinIds(idData.data),
           });
-          dataDb.historyList.add({
-            id,
-            thumbnail: vidData[0].videoDetails.thumbnails[0].url,
-            time: new Date().getTime(),
-            title: vidData[0].videoDetails.title,
-          });
+          const listDbdata = await dataDb.historyList.get(id);
+          if (listDbdata && listDbdata.id) {
+            dataDb.historyList.update(id, {
+              thumbnail: vidData[0].videoDetails.thumbnails[0].url,
+              time: new Date().getTime(),
+              title: vidData[0].videoDetails.title,
+            });
+          } else {
+            dataDb.historyList.add({
+              id,
+              thumbnail: vidData[0].videoDetails.thumbnails[0].url,
+              time: new Date().getTime(),
+              title: vidData[0].videoDetails.title,
+            });
+          }
         }
 
         dispatch(setLoading({ value: false, message: "" }));
@@ -247,13 +258,39 @@ const VideoListPlayer = () => {
           return 1;
       }
     });
-  }
+  };
 
   const onSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.currentTarget.value;
     setSortBy(value);
     setVideoList((pre) => sort(pre, value));
   };
+
+  const onFavChange = () => {
+    setIsFavList((pre) => {
+      const val = !pre;
+      if (val) {
+        dataDb.favList.add({
+          id: router.query?.list?.toString() || "",
+          thumbnail: videoList[0].videoDetails.thumbnails[0].url,
+          title: videoList[0].videoDetails.title,
+        });
+      } else {
+        dataDb.favList.delete(router.query?.list?.toString() || "");
+      }
+      return val;
+    });
+  };
+
+  useEffect(() => {
+    dataDb.favList.get(router.query?.list?.toString() || "").then((fav) => {
+      if (fav && fav.id) {
+        setIsFavList(true);
+      } else {
+        setIsFavList(false);
+      }
+    });
+  }, [router.query?.list]);
 
   return (
     <div>
@@ -273,8 +310,12 @@ const VideoListPlayer = () => {
         />
       )}
       <div className={style.controlCont}>
-        <div>
-          <select value={sortBy} onChange={onSelectChange}>
+        <div className={style.controlsSelectFavBtn}>
+          <select
+            value={sortBy}
+            onChange={onSelectChange}
+            disabled={videoList.length === 0}
+          >
             <option value="position">By position</option>
             <option value="name">By name</option>
             <option value="view">By view count</option>
@@ -283,10 +324,18 @@ const VideoListPlayer = () => {
             <option value="date">By upload date</option>
             <option value="category">By category</option>
           </select>
+          <button
+            onClick={onFavChange}
+            className={style.listFavBtn}
+            disabled={videoList.length === 0}
+          >
+            {isFavList ? <FaHeart size={28} /> : <FaRegHeart size={28} />}
+          </button>
         </div>
         <div>
           <form onSubmit={onSearchSubmit}>
             <input
+              disabled={videoList.length === 0}
               type="search"
               placeholder="Search"
               value={searchInpVal}
