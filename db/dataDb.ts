@@ -7,16 +7,18 @@ export class MySubClassedDexie extends Dexie {
   historyVideo!: Table<HistoryDbVideoType>;
   historySearch!: Table<HistoryDbSearchType>;
   favVideo!: Table<FavDbVideoType>;
+  favList!: Table<FavDbListType>;
 
   constructor() {
     super("myDatabase");
-    this.version(6).stores({
+    this.version(7).stores({
       videoItem: "videoId",
       videoDetails: "listId",
       historyList: "id, title",
       historyVideo: "id, title, owner",
       historySearch: "query",
       favVideo: "id",
+      favList: "id",
     });
   }
 }
