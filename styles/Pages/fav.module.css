@@ -1,0 +1,77 @@
+.favListCont {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  padding: 10px;
+}
+
+.favItem {
+  background-color: var(--bg2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.favItem img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16/9;
+}
+
+.favItem p {
+  color: var(--black);
+  padding: 10px;
+  font-size: 14px;
+}
+
+.controlsCont {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+}
+
+.controlsCont input,
+.controlsCont select {
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 2px solid var(--black);
+}
+
+.controlsCont input {
+  margin-top: 10px;
+}
+
+@media (min-width: 600px) {
+  .favListCont {
+    grid-template-columns: 1fr 1fr;
+  }
+  .controlsCont {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .controlsCont select,
+  .controlsCont input {
+    width: 230px;
+  }
+}
+
+@media (min-width: 800px) {
+  .favListCont {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media (min-width: 1000px) {
+  .favListCont {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+@media (min-width: 1200px) {
+  .favListCont {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  }
+}
