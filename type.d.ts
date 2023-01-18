@@ -358,7 +358,7 @@ interface FavDbVideoType {
   id: string;
   title: string;
   thumbnail: string;
-  owner: string;
+  owner?: string;
 }
 
 interface HistoryDbSearchType {
@@ -367,3 +367,9 @@ interface HistoryDbSearchType {
   freq: number;
 }
 //History Db type end
+
+interface FavDbListType {
+  id: string;
+  title: string;
+  thumbnail: string;
+}
