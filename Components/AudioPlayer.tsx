@@ -209,7 +209,7 @@ const AudioPlayer = ({ data, next, previous }: AudioPlayerProps) => {
         onEnded={onEnd}
         onTimeUpdate={onTimeUpdate}
         onLoadedMetadata={onLoadedMetadata}
-        // autoPlay
+        autoPlay
         onError={(e) => onAudioError(e.currentTarget)}
       ></audio>
       <div className={style.playerBack}>
