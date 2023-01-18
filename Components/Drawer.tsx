@@ -61,6 +61,12 @@ const Drawer = ({ isDrawerShow, setIsDrawerShow }: DrawerProps) => {
             route={route}
             onClick={onItemClick}
           />
+          <LinkItem
+            href="/fav"
+            title="Favourite"
+            route={route}
+            onClick={onItemClick}
+          />
         </ul>
       </nav>
     </div>
