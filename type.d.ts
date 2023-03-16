@@ -1,7 +1,7 @@
 interface GStateType {
   isLoading: { value: boolean; message: string };
   notification: NotificationSliceType[];
-  setting: DefaultSetting;
+  setting: SettingVars;
 }
 
 interface NotificationSliceType {
@@ -372,4 +372,25 @@ interface FavDbListType {
   id: string;
   title: string;
   thumbnail: string;
+}
+
+interface SettingVars {
+  isDark: boolean;
+  cacheAudio: boolean;
+  cacheAudioNumber: number;
+  id: number;
+}
+
+interface SettingVarsU {
+  isDark?: boolean;
+  cacheAudio?: boolean;
+  cacheAudioNumber?: number;
+  id?: number;
+}
+
+interface AudioCache {
+  id: string;
+  buffer: any[];
+  mime: string;
+  duration: number;
 }
