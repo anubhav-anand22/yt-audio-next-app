@@ -5,12 +5,13 @@ import headerModule from "../styles/Header.module.css";
 import Drawer from "../Components/Drawer";
 import { useEffect, useState } from "react";
 import { NextRouter, useRouter } from "next/router";
-import { Provider, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
 import store from "../store/store";
 import GlobalLoading from "../Components/GlobalLoading";
 import Notification from "../Components/Notification";
 import Head from "next/head";
 import { parseUrlInput } from "../helpers/parseUrlInput";
+import { InitComponent } from "../Components/InitComponent";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isDrawerShow, setIsDrawerShow] = useState(false);
@@ -47,7 +48,12 @@ export default function App({ Component, pageProps }: AppProps) {
             <ul className={headerModule.navUl}>
               <LinkItem href="/" title="Home" route={route} />
               <LinkItem href="/setting" title="Setting" route={route} />
-              <button className={headerModule.navMoreBtn} onClick={() => setIsDrawerShow(!isDrawerShow)}>More</button>
+              <button
+                className={headerModule.navMoreBtn}
+                onClick={() => setIsDrawerShow(!isDrawerShow)}
+              >
+                More
+              </button>
             </ul>
           </nav>
           <div
@@ -63,6 +69,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <GlobalLoading />
         <Notification />
         <Component {...pageProps} />
+        <InitComponent />
       </div>
     </Provider>
   );
