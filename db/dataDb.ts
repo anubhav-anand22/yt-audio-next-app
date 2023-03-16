@@ -8,10 +8,12 @@ export class MySubClassedDexie extends Dexie {
   historySearch!: Table<HistoryDbSearchType>;
   favVideo!: Table<FavDbVideoType>;
   favList!: Table<FavDbListType>;
+  settingVars!: Table<SettingVars>;
+  audioCache!: Table<AudioCache>;
 
   constructor() {
     super("myDatabase");
-    this.version(7).stores({
+    this.version(10).stores({
       videoItem: "videoId",
       videoDetails: "listId",
       historyList: "id, title",
@@ -19,6 +21,8 @@ export class MySubClassedDexie extends Dexie {
       historySearch: "query",
       favVideo: "id",
       favList: "id",
+      settingVars: "id",
+      audioCache: "id",
     });
   }
 }
