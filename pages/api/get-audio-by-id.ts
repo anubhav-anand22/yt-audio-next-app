@@ -26,9 +26,11 @@ export default async function handler(
   res.writeHead(206, "keep-alive", {
     "Content-Length": obj.contentLength,
     "Accept-Ranges": "bytes",
-    "Content-Type": "audio/mp3",
-    "Content-Range": `bytes ${start}-${end}/${obj.contentLength}`
-  })
+    "Content-Type": obj.mimeType,
+    "Content-Range": `bytes ${start}-${end}/${obj.contentLength}`,
+  });
+
+  console.log(obj.mimeType, obj.url);
 
   https.get(
     obj.url,
