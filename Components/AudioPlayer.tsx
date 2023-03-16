@@ -23,6 +23,7 @@ import { useDispatch } from "react-redux";
 import { addNotification } from "../store/notificationSlice";
 import { delayedInput } from "../helpers/delayedInput";
 import { dataDb } from "../db/dataDb";
+import { getMediaSource } from "../helpers/getMediaSource";
 
 interface AudioPlayerProps {
   data: VideoDetailsType;
@@ -44,6 +45,7 @@ const AudioPlayer = ({ data, next, previous }: AudioPlayerProps) => {
   const [isFav, setIsFav] = useState(false);
   const [isLoop, setIsLoop] = useState(false);
   const dispatch = useDispatch();
+  const [audioUrl, setAudioUrl] = useState("");
 
   const toggleFullscreenHandler = () => {
     setIsFullScreen((e) => !e);
@@ -107,6 +109,7 @@ const AudioPlayer = ({ data, next, previous }: AudioPlayerProps) => {
 
   const onTimeUpdate = () => {
     setCurrentTime(audioEl.current?.currentTime || 0);
+    console.log(audioEl.current?.currentTime, audioEl.current?.duration);
   };
 
   const onLoadedMetadata = async () => {
@@ -182,10 +185,13 @@ const AudioPlayer = ({ data, next, previous }: AudioPlayerProps) => {
   };
 
   const onAudioError = (e: HTMLAudioElement) => {
-    if (e.src) {
-      const urlObj = new URL(location.href);
-      e.src = `${urlObj.protocol}//${urlObj.host}/api/get-audio-by-id?id=${data.videoId}`;
-    }
+    // if (e.src) {
+    //   const urlObj = new URL(location.href);
+    //   const url = `${urlObj.protocol}//${urlObj.host}/api/get-audio-by-id?id=${data.videoId}`;
+    //   e.src = getMediaSource(url, data.videoId, () => {
+    //     console.log("unable to get secnond url");
+    //   });
+    // }
   };
 
   useEffect(() => {
@@ -198,12 +204,22 @@ const AudioPlayer = ({ data, next, previous }: AudioPlayerProps) => {
     });
   }, [data.videoId]);
 
+  useEffect(() => {
+    const urlObj = new URL(location.href);
+    const urle = `${urlObj.protocol}//${urlObj.host}/api/get-audio-by-id?id=${data.videoId}`;
+    const url = getMediaSource(urle, data.videoId, () => {
+      console.log("unable to get url");
+    });
+    setAudioUrl(url);
+  }, [data.videoId]);
+
   return (
     <div className={`${style.player} ${isFullScreen ? style.fullScreen : ""}`}>
       <audio
+        id="audio"
         ref={audioEl}
         className={style.audioEl}
-        src={data.audioUrl || ""}
+        src={audioUrl || ""}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         onEnded={onEnd}
