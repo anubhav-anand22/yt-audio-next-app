@@ -27,6 +27,60 @@
   font-size: 16px;
 }
 
+.itemBtn input[type="checkbox"] {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border: 7px;
+  margin-right: 10px;
+}
+
+.itemBtn input[type="checkbox"]::before {
+  display: block;
+  content: "";
+  width: 96px;
+  height: 28px;
+  bottom: 0px;
+  border-radius: 7px;
+  right: -10px;
+  position: absolute;
+  border: 2px solid var(--trackColor);
+  background-color: #ff0000;
+  transition: background 0.3s ease-in-out 0.15s;
+}
+
+.itemBtn input[type="checkbox"]:checked:before {
+  background-color: #00ff00;
+}
+
+.itemBtn input[type="checkbox"]::after {
+  display: block;
+  content: "";
+  width: 32px;
+  height: 28px;
+  bottom: 0px;
+  border-radius: 7px;
+  left: -58px;
+  position: absolute;
+  border: 2px solid var(--trackColor);
+  background-color: var(--trackColor);
+  transition: transform 0.3s ease-in-out;
+}
+
+.itemBtn input[type="checkbox"]:checked::after {
+  transform: translateX(64px);
+}
+
+.itemBtn input[type="text"],
+.itemBtn input[type="number"] {
+  width: 100px;
+  padding: 7px;
+  border-radius: 7px;
+  border: none;
+  font-size: 16px;
+  background-color: var(--trackColor);
+}
+
 .itemRangeRangeCont {
   display: flex;
   align-items: center;
