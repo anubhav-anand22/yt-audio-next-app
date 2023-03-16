@@ -10,6 +10,7 @@
   --bg: #f7fff7;
   --bg2: #dbdbdb;
   --trackColor: #efefef;
+  --per-black: #000000;
 }
 
 html,
@@ -52,4 +53,32 @@ html[data-theme="dark"] body {
   --bg: #292f36;
   --bg2: #1f242b;
   --trackColor: #6b6b6b;
+}
+
+.hint {
+  display: inline-block;
+  border: 1px solid var(--action-color);
+  padding: 7px;
+  width: 34px;
+  text-align: center;
+  border-radius: 17px;
+  margin: 0 10px;
+  position: relative;
+}
+
+.hint::before {
+  display: none;
+  content: attr(data-hint);
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--action-color);
+  color: var(--per-black);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.hint:focus:before,
+.hint:hover::before {
+  display: block;
 }
